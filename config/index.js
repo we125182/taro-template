@@ -1,4 +1,7 @@
 const path = require('path')
+const registerAutoImportsPlugin = require('./auto-imports')
+
+const resolve = _path => path.resolve(__dirname, '..', _path)
 
 const config = {
   projectName: 'taro-3-5',
@@ -24,7 +27,7 @@ const config = {
     }
   },
   alias: {
-    '@': path.resolve(__dirname, '..', 'src')
+    '@': resolve('src')
   },
   framework: 'vue3',
   compiler: 'webpack5',
@@ -33,6 +36,7 @@ const config = {
   },
   mini: {
     webpackChain (chain) {
+      registerAutoImportsPlugin(chain)
       chain.merge({
         module: {
           rule: {
@@ -48,6 +52,7 @@ const config = {
           }
         }
       })
+      // require('fs').writeFileSync(resolve(`${process.env.TARO_ENV}.inspect.config.js`), 'module.exports = ' + chain.toString())
     },
     postcss: {
       pxtransform: {
